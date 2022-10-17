@@ -7,8 +7,8 @@ namespace LeapMotionCursor
     {
         static void Main(string[] args)
         {
-            Controller cntrl = new Controller();
-            LeapListener listener = new LeapListener();
+            Controller cntrl = new();
+            LeapListener listener = new();
 
             cntrl.AddListener(listener);
 

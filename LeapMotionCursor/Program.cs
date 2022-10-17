@@ -1,21 +1,13 @@
 ﻿using System;
 using Leap;
+using LeapMotionCursor;
 
-namespace LeapMotionCursor
-{
-    class Program
-    {
-        static void Main(string[] args)
-        {
-            Controller cntrl = new();
-            LeapListener listener = new();
+Controller cntrl = new();
+LeapListener listener = new();
 
-            cntrl.AddListener(listener);
+cntrl.AddListener(listener);
 
-            Console.ReadLine();
+Console.ReadLine();
 
-            cntrl.RemoveListener(listener);
-            cntrl.Dispose();
-        }
-    }
-}
+cntrl.RemoveListener(listener);
+cntrl.Dispose();

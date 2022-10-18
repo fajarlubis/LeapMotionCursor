@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Leap;
 
 namespace LeapMotionCursor
@@ -33,9 +33,20 @@ namespace LeapMotionCursor
         {
             // Get the current frame.
             Frame currentFrame = cntrlr.Frame();
+            cntrlr.EnableGesture(Gesture.GestureType.TYPE_KEY_TAP);
 
             currentTime = currentFrame.Timestamp;
             timeChange = currentTime - previousTime;
+
+            for (int g = 0; g < currentFrame.Gestures().Count; g++)
+            {
+                if (currentFrame.Gestures()[g].Type == Gesture.GestureType.TYPE_KEY_TAP)
+                {
+                    MouseCursor.SendClick();
+                    Console.WriteLine(currentFrame.Gestures()[g].Type);
+                    break;
+                }
+            }
 
             if (timeChange > 10000)
             {
@@ -44,8 +55,6 @@ namespace LeapMotionCursor
                     // Get the first finger in the list of fingers
                     Finger finger = currentFrame.Fingers[0];
                     // Get the closest screen intercepting a ray projecting from the finger
-                    // Screen screen = cntrlr.CalibratedScreens.ClosestScreenHit(finger);
-                    // Screen screen = cntrlr.LocatedScreens.ClosestScreen(finger.TipPosition);
                     Screen screen = cntrlr.LocatedScreens.ClosestScreenHit(finger);
 
                     if (screen != null && screen.IsValid)
@@ -54,7 +63,8 @@ namespace LeapMotionCursor
                         var tipVelocity = (int)finger.TipVelocity.Magnitude;
 
                         // Use tipVelocity to reduce jitters when attempting to hold
-                        // the cursor steady
+                        // the cursor steady.
+                        // Change this value if needed.
                         if (tipVelocity > 25)
                         {
                             var xScreenIntersect = screen.Intersect(finger, true).x;
@@ -65,6 +75,7 @@ namespace LeapMotionCursor
                                 var x = (int)(xScreenIntersect * screen.WidthPixels);
                                 var y = (int)(screen.HeightPixels - (yScreenIntersect * screen.HeightPixels));
 
+                                // Write to Console
                                 Console.WriteLine("Screen intersect X: " + xScreenIntersect.ToString());
                                 Console.WriteLine("Screen intersect Y: " + yScreenIntersect.ToString());
                                 Console.WriteLine("Width pixels: " + screen.WidthPixels.ToString());
